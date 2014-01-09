@@ -1,0 +1,43 @@
+(ns first.core
+  (:gen-class)
+  (:use (guiftw swt styles))
+  (:import (org.eclipse.swt SWT)
+           (org.eclipse.swt.widgets Shell Button MessageBox)
+           (org.eclipse.swt.events SelectionListener)
+           (org.eclipse.swt.layout FillLayout)))
+
+(def window
+  (swt
+   [Shell [*id :main-window]
+    [Button [*id :super-button]]]))
+
+(defn get-info [obj]
+  (reduce str
+    (for [[k v] (bean obj)]
+      (str k " " (->> v str (take 50) (reduce str)) "\n"))))
+
+(defn show-info [gui event]
+  (doto (MessageBox.
+         (:root @gui)
+         (bit-or SWT/ICON_INFORMATION SWT/OK))
+    (.setText "Event Info")
+    (.setMessage (get-info event))
+    .open))
+
+(def look
+  (stylesheet
+   [:main-window] [:text "SWT FTW!"
+                   :size ^unroll (300 200)
+                   :layout (FillLayout.)]
+   [:super-button] [:*cons [SWT/PUSH]
+                    :text "Make something happen!"]))
+
+(def actions
+  (stylesheet
+   [:super-button] [:selection+widget-selected show-info]))
+
+(defn -main [& args]
+  (let [gui (window look actions)
+        shell (:root @gui)]
+    (.open shell)
+    (swt-loop shell)))
