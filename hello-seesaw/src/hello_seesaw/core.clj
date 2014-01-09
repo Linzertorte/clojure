@@ -12,9 +12,9 @@
 (def states ["CA", "MA","GA", "MI"])
 
 (def defaults
-  {:first-name "Qingfei"
+  {:first-name "Baochang"
    :last-name "MA"
-   :street "36 S Huntington Ave #7."
+   :street "36 Main St."
    :city "Boston"
    :zip "12345"
    :state "MA"})
